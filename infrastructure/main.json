@@ -1,0 +1,330 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "type": "string",
+      "defaultValue": "microhack",
+      "metadata": {
+        "description": "Base name for all resources"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": ["dev", "prod"],
+      "metadata": {
+        "description": "Environment (dev or prod)"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources"
+      }
+    },
+    "mysqlAdminUsername": {
+      "type": "string",
+      "defaultValue": "microhackadmin",
+      "metadata": {
+        "description": "MySQL administrator username"
+      }
+    },
+    "mysqlAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "MySQL administrator password"
+      }
+    },
+    "mysqlSkuName": {
+      "type": "string",
+      "defaultValue": "Standard_B1ms",
+      "metadata": {
+        "description": "MySQL SKU name"
+      }
+    },
+    "mysqlSkuTier": {
+      "type": "string",
+      "defaultValue": "Burstable",
+      "metadata": {
+        "description": "MySQL SKU tier"
+      }
+    },
+    "mysqlStorageSizeGB": {
+      "type": "int",
+      "defaultValue": 20,
+      "metadata": {
+        "description": "MySQL storage size in GB"
+      }
+    },
+    "appServicePlanSku": {
+      "type": "string",
+      "defaultValue": "B1",
+      "metadata": {
+        "description": "App Service Plan SKU"
+      }
+    }
+  },
+  "variables": {
+    "mysqlServerName": "[concat(parameters('appName'), '-', parameters('environment'), '-dbserver')]",
+    "mysqlDatabaseName": "[concat(parameters('appName'), '_', parameters('environment'))]",
+    "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'stor')]",
+    "appServicePlanName": "[concat(parameters('appName'), '-', parameters('environment'), '-plan')]",
+    "webAppName": "[concat(parameters('appName'), '-', parameters('environment'), '-app')]",
+    "keyVaultName": "[concat(parameters('appName'), '-', parameters('environment'), '-kv')]",
+    "appInsightsName": "[concat(parameters('appName'), '-', parameters('environment'), '-ai')]",
+    "logAnalyticsName": "[concat(parameters('appName'), '-', parameters('environment'), '-logs')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2021-06-01",
+      "name": "[variables('logAnalyticsName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "sku": {
+          "name": "PerGB2018"
+        },
+        "retentionInDays": 30
+      }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[variables('appInsightsName')]",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsName'))]"
+      ],
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsName'))]"
+      }
+    },
+    {
+      "type": "Microsoft.DBforMySQL/flexibleServers",
+      "apiVersion": "2021-12-01-preview",
+      "name": "[variables('mysqlServerName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('mysqlSkuName')]",
+        "tier": "[parameters('mysqlSkuTier')]"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('mysqlAdminUsername')]",
+        "administratorLoginPassword": "[parameters('mysqlAdminPassword')]",
+        "version": "8.0.21",
+        "storage": {
+          "storageSizeGB": "[parameters('mysqlStorageSizeGB')]",
+          "autoGrow": "Enabled"
+        },
+        "backup": {
+          "backupRetentionDays": 7,
+          "geoRedundantBackup": "Disabled"
+        },
+        "highAvailability": {
+          "mode": "Disabled"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.DBforMySQL/flexibleServers/databases",
+      "apiVersion": "2021-12-01-preview",
+      "name": "[concat(variables('mysqlServerName'), '/', variables('mysqlDatabaseName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mysqlServerName'))]"
+      ],
+      "properties": {
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci"
+      }
+    },
+    {
+      "type": "Microsoft.DBforMySQL/flexibleServers/firewallRules",
+      "apiVersion": "2021-12-01-preview",
+      "name": "[concat(variables('mysqlServerName'), '/AllowAllAzureIPs')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mysqlServerName'))]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "0.0.0.0"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2021-09-01",
+      "name": "[variables('storageAccountName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "accessTier": "Hot",
+        "allowBlobPublicAccess": false,
+        "minimumTlsVersion": "TLS1_2"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2021-09-01",
+      "name": "[concat(variables('storageAccountName'), '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2021-09-01",
+      "name": "[concat(variables('storageAccountName'), '/default/documents')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageAccountName'), 'default')]"
+      ],
+      "properties": {
+        "publicAccess": "None"
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2021-03-01",
+      "name": "[variables('appServicePlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('appServicePlanSku')]"
+      },
+      "kind": "linux",
+      "properties": {
+        "reserved": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2021-03-01",
+      "name": "[variables('webAppName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "[resourceId('Microsoft.DBforMySQL/flexibleServers/databases', variables('mysqlServerName'), variables('mysqlDatabaseName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
+      ],
+      "kind": "app,linux",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "siteConfig": {
+          "linuxFxVersion": "NODE|18-lts",
+          "alwaysOn": true,
+          "ftpsState": "Disabled",
+          "minTlsVersion": "1.2",
+          "appSettings": [
+            {
+              "name": "NODE_ENV",
+              "value": "production"
+            },
+            {
+              "name": "DATABASE_TYPE",
+              "value": "mysql"
+            },
+            {
+              "name": "MYSQL_HOST",
+              "value": "[concat(variables('mysqlServerName'), '.mysql.database.azure.com')]"
+            },
+            {
+              "name": "MYSQL_PORT",
+              "value": "3306"
+            },
+            {
+              "name": "MYSQL_USER",
+              "value": "[parameters('mysqlAdminUsername')]"
+            },
+            {
+              "name": "MYSQL_PASSWORD",
+              "value": "[parameters('mysqlAdminPassword')]"
+            },
+            {
+              "name": "MYSQL_DATABASE",
+              "value": "[variables('mysqlDatabaseName')]"
+            },
+            {
+              "name": "MYSQL_SSL",
+              "value": "true"
+            },
+            {
+              "name": "STORAGE_TYPE",
+              "value": "azure"
+            },
+            {
+              "name": "AZURE_STORAGE_ACCOUNT",
+              "value": "[variables('storageAccountName')]"
+            },
+            {
+              "name": "AZURE_STORAGE_KEY",
+              "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2021-09-01').keys[0].value]"
+            },
+            {
+              "name": "AZURE_STORAGE_CONTAINER",
+              "value": "documents"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName'))).InstrumentationKey]"
+            },
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName'))).ConnectionString]"
+            },
+            {
+              "name": "PORT",
+              "value": "8080"
+            },
+            {
+              "name": "CORS_ORIGIN",
+              "value": "[concat('https://', variables('webAppName'), '.azurewebsites.net')]"
+            }
+          ]
+        },
+        "httpsOnly": true
+      }
+    }
+  ],
+  "outputs": {
+    "webAppName": {
+      "type": "string",
+      "value": "[variables('webAppName')]"
+    },
+    "webAppUrl": {
+      "type": "string",
+      "value": "[concat('https://', variables('webAppName'), '.azurewebsites.net')]"
+    },
+    "mysqlServerName": {
+      "type": "string",
+      "value": "[variables('mysqlServerName')]"
+    },
+    "mysqlFqdn": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mysqlServerName'))).fullyQualifiedDomainName]"
+    },
+    "mysqlDatabaseName": {
+      "type": "string",
+      "value": "[variables('mysqlDatabaseName')]"
+    },
+    "storageAccountName": {
+      "type": "string",
+      "value": "[variables('storageAccountName')]"
+    },
+    "appInsightsName": {
+      "type": "string",
+      "value": "[variables('appInsightsName')]"
+    },
+    "appInsightsInstrumentationKey": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName'))).InstrumentationKey]"
+    }
+  }
+}

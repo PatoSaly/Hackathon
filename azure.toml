@@ -1,0 +1,27 @@
+# Azure Web App deployment configuration
+# https://docs.microsoft.com/azure/app-service/
+
+# Build configuration
+[build]
+  command = "npm install && cd frontend && npm install && npm run build"
+
+# Runtime configuration  
+[runtime]
+  nodeVersion = "18"
+
+# Static files
+[[static]]
+  from = "frontend/build"
+  to = "/"
+
+# API routes
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

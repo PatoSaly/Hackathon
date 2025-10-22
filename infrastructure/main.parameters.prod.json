@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "projectName": {
+      "value": "microhack"
+    },
+    "environment": {
+      "value": "prod"
+    },
+    "location": {
+      "value": "West Europe"
+    },
+    "administratorLogin": {
+      "value": "microhackadmin"
+    },
+    "administratorLoginPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/d9f78e2d-60c6-4a0a-a6df-85c33540dd5e/resourceGroups/rg-tim5/providers/Microsoft.KeyVault/vaults/microhack-prod-kv"
+        },
+        "secretName": "DatabaseAdminPassword"
+      }
+    },
+    "databaseSkuName": {
+      "value": "GP_Gen5_2"
+    },
+    "databaseSkuTier": {
+      "value": "GeneralPurpose"
+    },
+    "appServicePlanSku": {
+      "value": "S1"
+    },
+    "enableApplicationInsights": {
+      "value": true
+    },
+    "enableKeyVault": {
+      "value": true
+    }
+  }
+}

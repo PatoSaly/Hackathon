@@ -1,0 +1,685 @@
+/* UploadSignAppOriginal.css - Štýly pre pôvodný UploadSignApp komponent */
+
+/* Hlavný kontajner */
+.upload-sign-app {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.app-title {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 30px;
+}
+
+/* Status správa */
+.status-message {
+    background-color: #e7f3ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    text-align: center;
+    border: 1px solid #007bff;
+}
+
+/* Tab navigácia */
+.tab-navigation {
+    display: flex;
+    border-bottom: 3px solid #dee2e6;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    background-color: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.tab-button {
+    padding: 15px 20px;
+    border: none;
+    border-bottom: 4px solid transparent;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    opacity: 1;
+    min-width: 180px;
+    text-align: center;
+    flex: 1;
+}
+
+.tab-button.active {
+    border-bottom-color: #28a745;
+    background-color: #28a745;
+}
+
+.tab-button.enabled {
+    background-color: #007bff;
+}
+
+.tab-button.disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Tab obsah */
+.tab-content {
+    min-height: 500px;
+    background-color: white;
+    padding: 25px;
+    border-radius: 0 0 8px 8px;
+    border: 1px solid #dee2e6;
+    border-top: none;
+}
+
+/* Sekcie */
+.section-title {
+    color: #28a745;
+    margin-bottom: 20px;
+}
+
+/* Success alert */
+.success-alert {
+    background-color: #d4edda;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.new-document-btn {
+    margin-left: 10px;
+    font-size: 12px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Formuláre */
+.form-container {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-input.readonly {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-help-text {
+    color: #666;
+    font-size: 12px;
+}
+
+/* File upload */
+.file-upload-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.file-upload-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.file-status {
+    font-size: 14px;
+}
+
+.file-status.selected {
+    color: #28a745;
+    font-style: normal;
+}
+
+.file-status.empty {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Tlačidlá */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: opacity 0.3s ease;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.btn-medium {
+    padding: 8px 15px;
+    font-size: 14px;
+}
+
+/* Sign section */
+.sign-container {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.sign-document-id {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.sign-description {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.already-signed {
+    margin-top: 10px;
+    color: #dc3545;
+    font-size: 14px;
+}
+
+/* Warning messages */
+.warning-alert {
+    padding: 20px;
+    background-color: #fff3cd;
+    border-radius: 5px;
+}
+
+/* Approvers section */
+.approvers-warning {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+    color: #0c5460;
+}
+
+.approver-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.approver-row.selected {
+    background-color: #d4edda;
+}
+
+.approver-row.empty {
+    background-color: #f8f9fa;
+}
+
+.approver-info {
+    flex: 1;
+}
+
+.approver-department {
+    color: #666;
+    font-size: 12px;
+}
+
+.approver-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.approver-dropdown-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.approver-dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.approver-email {
+    font-size: 12px;
+    color: #666;
+}
+
+/* Simulation section */
+.simulation-section {
+    margin-top: 20px;
+    background-color: #e7f3ff;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.simulation-item {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.simulation-completed {
+    margin-top: 20px;
+    background-color: #d4edda;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 0;
+    color: #155724;
+}
+
+/* History section */
+.history-container {
+    border: 1px solid #28a745;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8fff8;
+}
+
+.history-title {
+    margin-bottom: 20px;
+}
+
+.basic-info-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.timeline-section {
+    margin-bottom: 20px;
+}
+
+.timeline-container {
+    border-left: 3px solid #007bff;
+    padding-left: 20px;
+}
+
+.timeline-item {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -27px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.timeline-dot.upload {
+    background-color: #28a745;
+}
+
+.timeline-dot.sign {
+    background-color: #007bff;
+}
+
+.timeline-dot.approval {
+    background-color: #ffc107;
+}
+
+.timeline-dot.approved {
+    background-color: #28a745;
+}
+
+.timeline-dot.rejected {
+    background-color: #dc3545;
+}
+
+.file-section {
+    background-color: #e7f3ff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.file-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+/* Approvers history */
+.approvers-history-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.approvers-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.approver-card {
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.approver-card.approved {
+    background-color: #d4edda;
+}
+
+.approver-card.rejected {
+    background-color: #f8d7da;
+}
+
+.approver-card.pending {
+    background-color: #fff3cd;
+}
+
+.approver-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.approver-number {
+    font-size: 12px;
+    color: #666;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.status-badge.approved {
+    background-color: #28a745;
+}
+
+.status-badge.rejected {
+    background-color: #dc3545;
+}
+
+.status-badge.pending {
+    background-color: #ffc107;
+}
+
+.approval-date {
+    font-size: 11px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.summary-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e7f3ff;
+    border-radius: 8px;
+}
+
+.summary-stats {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+}
+
+/* History simulation */
+.history-simulation {
+    margin-top: 20px;
+    background-color: #e7f3ff;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.simulation-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.simulation-approver {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.simulation-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.approver-email-label {
+    min-width: 200px;
+    font-weight: bold;
+}
+
+/* All documents section */
+.documents-controls {
+    margin-bottom: 20px;
+}
+
+.stats-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    flex-wrap: wrap;
+}
+
+.stat-badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.stat-badge.approved {
+    background-color: #28a745;
+}
+
+.stat-badge.rejected {
+    background-color: #dc3545;
+}
+
+.stat-badge.waiting {
+    background-color: #ffc107;
+    color: black;
+}
+
+.stat-badge.draft {
+    background-color: #6c757d;
+}
+
+.documents-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.document-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.document-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.document-info {
+    flex: 1;
+}
+
+.document-title {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.document-meta {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.document-meta.small {
+    font-size: 13px;
+}
+
+.document-actions {
+    text-align: right;
+}
+
+.document-status {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.document-approvers {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.view-detail-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.total-documents {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .upload-sign-app {
+        padding: 10px;
+    }
+    
+    .tab-navigation {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        min-width: auto;
+    }
+    
+    .stats-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .document-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .document-actions {
+        text-align: left;
+    }
+    
+    .summary-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .simulation-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .approver-email-label {
+        min-width: auto;
+    }
+}

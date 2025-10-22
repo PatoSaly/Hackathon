@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "projectName": {
+      "value": "microhack"
+    },
+    "environment": {
+      "value": "dev"
+    },
+    "location": {
+      "value": "West Europe"
+    },
+    "administratorLogin": {
+      "value": "microhackadmin"
+    },
+    "administratorLoginPassword": {
+      "value": "CHANGE_ME_SecurePassword123!"
+    },
+    "databaseSkuName": {
+      "value": "B_Gen5_1"
+    },
+    "databaseSkuTier": {
+      "value": "Basic"
+    },
+    "appServicePlanSku": {
+      "value": "B1"
+    },
+    "enableApplicationInsights": {
+      "value": true
+    },
+    "enableKeyVault": {
+      "value": true
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "microhack",
+  "version": "1.0.0",
+  "main": "database.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:verbose": "jest --verbose",
+    "test:db": "jest __tests__/database.test.js",
+    "test:api": "jest __tests__/api.test.js",
+    "test:storage": "jest __tests__/azure-storage.test.js",
+    "test:helpers": "jest __tests__/helpers.test.js",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "cd frontend && npm run build",
+    "build:azure": "cd frontend && npm run build:azure",
+    "build:production": "npm install && cd frontend && npm install && npm run build",
+    "migrate:mysql": "node scripts/migrate-to-mysql.js",
+    "deploy:infrastructure": "pwsh -ExecutionPolicy Bypass -File ./scripts/deploy-infrastructure.ps1",
+    "deploy:app": "pwsh -ExecutionPolicy Bypass -File ./scripts/deploy-application.ps1",
+    "deploy:azure": "powershell -ExecutionPolicy Bypass -File .\\deploy-azure.ps1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@azure/storage-blob": "^12.17.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "mysql2": "^3.6.3",
+    "pdf-lib": "^1.17.1",
+    "sqlite3": "^5.1.7"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0",
+    "supertest": "^7.1.4"
+  }
+}
