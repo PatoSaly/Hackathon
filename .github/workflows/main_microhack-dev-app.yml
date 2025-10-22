@@ -23,17 +23,36 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: npm install, build, and test
+      - name: Install backend dependencies
+        run: npm install
+
+      - name: Install frontend dependencies
         run: |
+          cd frontend
           npm install
+
+      - name: Build and test
+        run: |
           npm run build --if-present
           npm run test --if-present
+
+      - name: Prepare deployment package
+        run: |
+          mkdir deploy
+          cp -r node_modules deploy/
+          cp -r frontend/build deploy/frontend/build
+          cp package.json deploy/
+          cp server.js deploy/
+          cp database.js deploy/
+          cp database-mysql.js deploy/
+          cp azure-storage.js deploy/
+          cp -r images deploy/ 2>/dev/null || true
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: deploy
 
   deploy:
     runs-on: ubuntu-latest
