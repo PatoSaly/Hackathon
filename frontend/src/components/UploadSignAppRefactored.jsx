@@ -30,12 +30,6 @@ const UploadSignAppRefactored = () => {
     const [predefinedApprovers, setPredefinedApprovers] = useState([]);
     const [showApproverDropdown, setShowApproverDropdown] = useState(null);
     
-    // Načítanie pri štarte
-    useEffect(() => {
-        loadNextCaseId();
-        loadPredefinedApprovers();
-    }, []);
-
     const loadNextCaseId = useCallback(async () => {
         try {
             const response = await api.get('/next-case-id');
@@ -44,7 +38,7 @@ const UploadSignAppRefactored = () => {
             console.error('Chyba pri načítavaní Case ID:', error);
             setCaseName('000001');
         }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [api]);
 
     const loadPredefinedApprovers = useCallback(async () => {
         try {
@@ -53,7 +47,13 @@ const UploadSignAppRefactored = () => {
         } catch (error) {
             console.error('Chyba pri načítavaní schvaľovateľov:', error);
         }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [api]);
+    
+    // Načítanie pri štarte
+    useEffect(() => {
+        loadNextCaseId();
+        loadPredefinedApprovers();
+    }, [loadNextCaseId, loadPredefinedApprovers]);
     
     const handleLoadAllDocuments = useCallback(async () => {
         try {

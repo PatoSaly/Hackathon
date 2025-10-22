@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import useApi from '../hooks/useApi';
 
@@ -11,19 +11,19 @@ const AdminApproversTab = ({ onApproverChange }) => {
     const [showAddForm, setShowAddForm] = useState(false);
 
     // Načítanie schvaľovateľov
-    const loadApprovers = async () => {
+    const loadApprovers = useCallback(async () => {
         try {
             const response = await api.get('/admin/approvers');
             setApprovers(response);
         } catch (error) {
             window.alert('Chyba pri načítaní schvaľovateľov');
         }
-    };
+    }, [api]);
 
     // Načítaj pri prvom renderovaní
     useEffect(() => {
         loadApprovers();
-    }, []);
+    }, [loadApprovers]);
 
     // Pridanie nového schvaľovateľa
     const handleAdd = async (e) => {
