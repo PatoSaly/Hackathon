@@ -42,6 +42,7 @@ jobs:
           cp -r node_modules deploy/
           cp -r frontend/build deploy/frontend/
           cp package.json deploy/
+          cp .node-version deploy/
           cp server.js deploy/
           cp database.js deploy/
           cp database-mysql.js deploy/
