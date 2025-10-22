@@ -49,6 +49,45 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // =========================================================
+// HEALTH CHECK ENDPOINT
+// =========================================================
+app.get('/api/health', (req, res) => {
+    const healthcheck = {
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: {
+            nodeEnv: process.env.NODE_ENV || 'development',
+            nodeVersion: process.version,
+            database: databaseType,
+            storage: STORAGE_TYPE,
+            port: PORT
+        },
+        paths: {
+            uploadDir: UPLOAD_DIR,
+            uploadDirExists: require('fs').existsSync(UPLOAD_DIR)
+        }
+    };
+    
+    // Check database connection
+    if (databaseType === 'sqlite') {
+        db.get('SELECT 1', [], (err) => {
+            if (err) {
+                healthcheck.database_status = 'ERROR';
+                healthcheck.database_error = err.message;
+                return res.status(500).json(healthcheck);
+            }
+            healthcheck.database_status = 'OK';
+            res.json(healthcheck);
+        });
+    } else {
+        // MySQL health check
+        healthcheck.database_status = 'OK';
+        res.json(healthcheck);
+    }
+});
+
+// =========================================================
 // HELPER: Storage abstraction layer
 // =========================================================
 async function saveFile(fileName, fileBuffer) {
@@ -794,7 +833,13 @@ app.delete('/api/admin/approvers/:id', (req, res) => {
 // ==========================================================
 // Serve static frontend build files
 if (process.env.NODE_ENV === 'production') {
-    const buildPath = path.join(__dirname, 'build');
+    // Try frontend/build first (deployment structure), then build (alternative)
+    let buildPath = path.join(__dirname, 'frontend', 'build');
+    if (!require('fs').existsSync(buildPath)) {
+        buildPath = path.join(__dirname, 'build');
+    }
+    
+    console.log(`📂 Serving static files from: ${buildPath}`);
     app.use(express.static(buildPath));
     
     // SPA fallback - serve index.html for all non-API routes
@@ -808,10 +853,29 @@ if (process.env.NODE_ENV === 'production') {
 
 // Spustenie servera len ak nie je v test mode
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => {
-        // Vytvorenie adresára pre upload, ak neexistuje
-        fs.mkdir(UPLOAD_DIR, { recursive: true }).catch(console.error); 
-        console.log(`Server beží na http://localhost:${PORT}`);
+    // Vytvorenie adresára pre upload, ak neexistuje
+    fs.mkdir(UPLOAD_DIR, { recursive: true })
+        .then(() => {
+            console.log(`✅ Upload directory ready: ${UPLOAD_DIR}`);
+        })
+        .catch(err => {
+            console.error('❌ Failed to create upload directory:', err);
+        });
+
+    // Startup diagnostics
+    console.log('🚀 Starting Microhack Application...');
+    console.log(`📌 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`📌 Database: ${databaseType}`);
+    console.log(`📌 Storage: ${STORAGE_TYPE}`);
+    console.log(`📌 Port: ${PORT}`);
+    console.log(`📌 CORS Origin: ${process.env.CORS_ORIGIN || '*'}`);
+    
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`✅ Server is running on port ${PORT}`);
+        console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
+    }).on('error', (err) => {
+        console.error('❌ Server failed to start:', err);
+        process.exit(1);
     });
 }
 
